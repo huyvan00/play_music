@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Music player</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+            integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+            crossorigin="anonymous"
+        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="stylesheet.css" />
+        <div class="player">
+            <!-- Dashboard -->
+            <div class="dashboard">
+                <!-- Header -->
+                <header>
+                    <h4>Now playing:</h4>
+                    <h2>String 57th & 9th</h2>
+                </header>
+
+                <!-- CD -->
+                <div class="cd">
+                    <div
+                        class="cd-thumb"
+                        style="
+                            background-image: url('https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg');
+                        "
+                    ></div>
+                </div>
+
+                <!-- Control -->
+                <div class="control">
+                    <div class="btn btn-repeat">
+                        <i class="fas fa-redo"></i>
+                    </div>
+                    <div class="btn btn-prev">
+                        <i class="fas fa-step-backward"></i>
+                    </div>
+                    <div class="btn btn-toggle-play">
+                        <i class="fas fa-pause icon-pause"></i>
+                        <i class="fas fa-play icon-play"></i>
+                    </div>
+                    <div class="btn btn-next">
+                        <i class="fas fa-step-forward"></i>
+                    </div>
+                    <div class="btn btn-random">
+                        <i class="fas fa-random"></i>
+                    </div>
+                </div>
+
+                <input
+                    id="progress"
+                    class="progress"
+                    type="range"
+                    value="0"
+                    step="1"
+                    min="0"
+                    max="100"
+                />
+
+                <audio id="audio" src=""></audio>
+            </div>
+
+            <!-- Playlist -->
+            <div class="playlist"></div>
+        </div>
+
+        <!-- Design from: https://static.collectui.com/shots/3671744/musicloud-revolutionary-app-for-music-streaming-large -->
+    </head>
+
+    <body>
+        <script type="text/javascript">
+            const $ = document.querySelector.bind(document);
+            const $$ = document.querySelectorAll.bind(document);
+            const heading = $('header h2')
+            const cdThumb = $('.cd-thumb')
+            const audio = $('#audio')
+            const cd = $('.cd')
+            
+            const playBtn = $('.btn-toggle-play')
+            const player = $('.player')
+            const progress = $('#progress')
+
+            const app = {
+                currentIndex:0,
+                isPlaying: false,
+                songs: [
+                    {
+                        name: "Safe and sound",
+                        singer: "Taylor Swift ft The Civil War",
+                        path: "./assets/musics/Safe_Sound_feat_The_Civil_Wars.mp3",
+                        image: "./assets/images/Safe_and_Sound.jpg",
+                    },
+                    {
+                        name: "Just give me a reason",
+                        singer: "P!nk ft Nate Ruess",
+                        path: "./assets/musics/P!nk_Just_Give_Me_A_Reason_ft_Nate_Ruess.mp3",
+                        image: "./assets/images/JustGiveMeAReason.jpg",
+                    },
+                    {
+                        name: "If I die young",
+                        singer: "The band Perry",
+                        path: "./assets/musics/The_Band_Perry _If_I_Die_Young.mp3",
+                        image: "./assets/images/if_i_die_young.jpg",
+                    },
+                    {
+                        name: "Safe and sound",
+                        singer: "Taylor Swift ft The Civil War",
+                        path: "./assets/musics/Safe_Sound_feat_The_Civil_Wars.mp3",
+                        image: "./assets/images/Safe_and_Sound.jpg",
+                    },
+                    {
+                        name: "Just give me a reason",
+                        singer: "P!nk ft Nate Ruess",
+                        path: "./assets/musics/P!nk_Just_Give_Me_A_Reason_ft_Nate_Ruess.mp3",
+                        image: "./assets/images/JustGiveMeAReason.jpg",
+                    },
+                    {
+                        name: "If I die young",
+                        singer: "The band Perry",
+                        path: "./assets/musics/The_Band_Perry _If_I_Die_Young.mp3",
+                        image: "./assets/images/if_i_die_young.jpg",
+                    },
+                    {
+                        name: "Safe and sound",
+                        singer: "Taylor Swift ft The Civil War",
+                        path: "./assets/musics/Safe_Sound_feat_The_Civil_Wars.mp3",
+                        image: "./assets/images/Safe_and_Sound.jpg",
+                    },
+                    {
+                        name: "Just give me a reason",
+                        singer: "P!nk ft Nate Ruess",
+                        path: "./assets/musics/P!nk_Just_Give_Me_A_Reason_ft_Nate_Ruess.mp3",
+                        image: "./assets/images/JustGiveMeAReason.jpg",
+                    },
+                    {
+                        name: "If I die young",
+                        singer: "The band Perry",
+                        path: "./assets/musics/The_Band_Perry _If_I_Die_Young.mp3",
+                        image: "./assets/images/if_i_die_young.jpg",
+                    },
+                ],
+                render: function () {
+                    const htmls = this.songs.map((song) => {
+                        return `<div class="song">
+                                    <div
+                                        class="thumb"
+                                        style="
+                                            background-image: url('${song.image}');
+                                        "
+                                    ></div>
+                                    <div class="body">
+                                        <h3 class="title">${song.name}</h3>
+                                        <p class="author">${song.singer}</p>
+                                    </div>
+                                    <div class="option">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </div>
+                                </div>`;
+                    });
+                    $(".playlist").innerHTML = htmls.join("");
+                },
+                defineProperties: function() {
+                    Object.defineProperty(this, 'currentSong', {
+                        get: function() {
+                            return this.songs[this.currentIndex]
+                        }
+                    })
+                },
+                handleEvent: function() {
+                    const _this = this
+                    const cdWidth =  cd.offsetWidth
+
+                    // handle zoom layout info
+                    document.onscroll = function() {
+                        const scrollTop = window.scrollY || document.documentElement.scrollTop
+                        const newCdWidth = cdWidth - scrollTop
+
+                        cd.style.width = newCdWidth > 0 ? newCdWidth + 'px': 0
+                        cd.style.opacity = newCdWidth / cdWidth
+                    }
+
+                    // Play music buttons
+                    playBtn.onclick = function() {
+                        if (_this.isPlaying) {
+                            audio.pause()
+                        } else {
+                            audio.play()
+                        }
+                    }
+                    // When song was play
+                    audio.onplay = function() {
+                        _this.isPlaying = true
+                        player.classList.add('playing')
+                    }
+                    audio.onpause = function() {
+                        _this.isPlaying = false
+                        player.classList.remove('playing')
+                    }
+
+                    // Tien do bai hat thay doi
+                    audio.ontimeupdate = function() {
+                        if (audio.duration){
+                            const percentsOfProgress = Math.floor(audio.currentTime / audio.duration * 100)
+                            progress.value = percentsOfProgress
+                        }
+                    }
+                    // tua bai hat
+                    progress.onchange = function(e) {
+                        const seekTime = audio.duration  * (e.target.value / 100)
+                        audio.currentTime = seekTime
+                    }
+                },
+                loadCurrentSong: function() {
+
+                    heading.textContent = this.currentSong.name
+                    cdThumb.style.backgroundImage = `url('${this.currentSong.image}')`
+                    audio.src = this.currentSong.path
+                },
+
+                start: function () {
+                    // Define properties for objects
+                    this.defineProperties()
+                    // Listen/ handle DOM event
+                    this.handleEvent()
+                    // Loading current song in UI when start app
+                    this.loadCurrentSong()
+                    // Render playlist
+                    this.render();
+                    
+                },
+            };
+            app.start();
+        </script>
+    </body>
+</html>
